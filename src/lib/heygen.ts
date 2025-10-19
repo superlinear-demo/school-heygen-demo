@@ -3,7 +3,7 @@ import { HeyGenVideoRequest, HeyGenVideoResponse } from '@/types/form';
 
 export class HeyGenService {
   private static readonly API_URL = process.env.HEYGEN_API_URL || 'https://api.heygen.com';
-  private static readonly API_KEY = process.env.HEYGEN_API_KEY;
+  private static readonly API_KEY = process.env.HEYGEN_API_KEY || process.env.HEYGEN_API_TOKEN;
 
   static async generateVideo(request: HeyGenVideoRequest): Promise<HeyGenVideoResponse | null> {
     try {

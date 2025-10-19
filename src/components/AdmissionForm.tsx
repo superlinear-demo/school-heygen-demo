@@ -31,7 +31,7 @@ export default function AdmissionForm() {
     submitCompleteForm({ ...formData, step3: data });
   };
 
-  const submitCompleteForm = async (completeData: any) => {
+  const submitCompleteForm = async (completeData: { step1?: Step1Data; step2?: Step2Data; step3?: Step3Data }) => {
     try {
       const response = await fetch('/api/submit-form', {
         method: 'POST',

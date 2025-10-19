@@ -142,7 +142,7 @@ export default function Step2({ onSubmit, onPrevious }: Step2Props) {
 
         <div>
           <label htmlFor="areaOfInterest" className="block text-sm font-medium text-gray-700 mb-2">
-            Student's Area of Interest *
+            Student&apos;s Area of Interest *
           </label>
           <select
             id="areaOfInterest"

@@ -3,7 +3,7 @@ import { WhatsAppMessage } from '@/types/form';
 
 export class WhatsAppService {
   private static readonly API_URL = 'https://graph.facebook.com/v22.0';
-  private static readonly PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
+  private static readonly PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID || process.env.WHATSAPP_WABA;
   private static readonly ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 
   static async sendMessage(message: WhatsAppMessage): Promise<boolean> {
@@ -37,7 +37,7 @@ export class WhatsAppService {
       type: 'video',
       video: {
         link: videoUrl,
-        caption: caption || 'Welcome to Fortes Education!'
+        caption: caption || 'Welcome to Fortes Education! Here\'s your personalized video message.'
       }
     };
 
@@ -57,7 +57,7 @@ export class WhatsAppService {
   }
 
   static getDemoPhoneNumbers(): string[] {
-    const demoNumbers = process.env.DEMO_PHONE_NUMBERS || '919538055505';
+    const demoNumbers = process.env.DEMO_PHONE_NUMBERS || process.env.PHONE_LIST || '919538055505';
     return demoNumbers.split(',');
   }
 }

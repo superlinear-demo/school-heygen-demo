@@ -105,9 +105,9 @@ export default function Step3({ onSubmit, onPrevious }: Step3Props) {
         <div className="bg-blue-50 p-4 rounded-md">
           <h3 className="text-sm font-medium text-blue-800 mb-2">What happens next?</h3>
           <ul className="text-sm text-blue-700 space-y-1">
-            <li>• You'll receive a personalized video message from our team</li>
+            <li>• You&apos;ll receive a personalized video message from our team</li>
             <li>• The video will be sent to your selected WhatsApp number</li>
-            <li>• We'll schedule your interactive session at our Dubai campus</li>
+            <li>• We&apos;ll schedule your interactive session at our Dubai campus</li>
             <li>• Our team will follow up with additional information</li>
           </ul>
         </div>

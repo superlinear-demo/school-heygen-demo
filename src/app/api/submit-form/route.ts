@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { KVService } from '@/lib/kv';
+import { SupabaseService } from '@/lib/supabase-service';
+import { MemoryStorage } from '@/lib/memory-storage';
 import { HeyGenService } from '@/lib/heygen';
 import { FormData } from '@/types/form';
 
@@ -35,8 +36,13 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date().toISOString()
     };
 
-    // Save to KV store
-    await KVService.saveFormData(formData);
+    // Save to storage (Supabase if available, otherwise memory)
+    const hasSupabase = process.env.SL_SCHOOL_DEMO_SUPABASE_URL && process.env.SL_SCHOOL_DEMO_SUPABASE_SERVICE_ROLE_KEY;
+    if (hasSupabase) {
+      await SupabaseService.saveFormData(formData);
+    } else {
+      await MemoryStorage.saveFormData(formData);
+    }
 
     // Generate HeyGen video script
     const studentFirstName = step1.studentName.split(' ')[0];
@@ -55,7 +61,11 @@ export async function POST(request: NextRequest) {
 
     if (heygenResponse && heygenResponse.video_id) {
       // Update form with video ID for tracking
-      await KVService.updateFormStatus(formId, 'completed');
+      if (hasSupabase) {
+        await SupabaseService.updateFormStatus(formId, 'completed');
+      } else {
+        await MemoryStorage.updateFormStatus(formId, 'completed');
+      }
       
       return NextResponse.json({
         success: true,
@@ -65,7 +75,11 @@ export async function POST(request: NextRequest) {
       });
     } else {
       // Even if video generation fails, mark form as completed
-      await KVService.updateFormStatus(formId, 'completed');
+      if (hasSupabase) {
+        await SupabaseService.updateFormStatus(formId, 'completed');
+      } else {
+        await MemoryStorage.updateFormStatus(formId, 'completed');
+      }
       
       return NextResponse.json({
         success: true,
