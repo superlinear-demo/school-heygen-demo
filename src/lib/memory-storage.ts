@@ -14,6 +14,19 @@ class MemoryStorage {
     return this.forms.get(formId) || null;
   }
 
+  static getFormData(formId: string): FormData | null {
+    return this.forms.get(formId) || null;
+  }
+
+  static updateFormData(formId: string, updates: Partial<FormData>): void {
+    const formData = this.forms.get(formId);
+    if (formData) {
+      Object.assign(formData, updates);
+      formData.updatedAt = new Date().toISOString();
+      this.forms.set(formId, formData);
+    }
+  }
+
   static async updateFormStatus(formId: string, status: 'in_progress' | 'completed'): Promise<void> {
     const formData = this.forms.get(formId);
     if (formData) {

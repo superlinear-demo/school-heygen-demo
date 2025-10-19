@@ -19,6 +19,8 @@ interface DbFormData {
 }
 
 export class SupabaseService {
+  static supabase = supabase;
+
   static async saveFormData(formData: FormData): Promise<void> {
     const { error } = await supabase
       .from('forms')
@@ -121,6 +123,30 @@ export class SupabaseService {
     }
 
     return data.map(this.mapDbToFormData);
+  }
+
+  static async updateFormData(formId: string, updates: Partial<FormData>): Promise<void> {
+    const updateData: any = {
+      updated_at: new Date().toISOString()
+    };
+
+    if (updates.currentGrade !== undefined) updateData.current_grade = updates.currentGrade;
+    if (updates.currentSchool !== undefined) updateData.current_school = updates.currentSchool;
+    if (updates.placeOfStudy !== undefined) updateData.place_of_study = updates.placeOfStudy;
+    if (updates.areaOfInterest !== undefined) updateData.area_of_interest = updates.areaOfInterest;
+    if (updates.phoneNumber !== undefined) updateData.phone_number = updates.phoneNumber;
+    if (updates.message !== undefined) updateData.message = updates.message;
+    if (updates.status !== undefined) updateData.status = updates.status;
+
+    const { error } = await supabase
+      .from('forms')
+      .update(updateData)
+      .eq('id', formId);
+
+    if (error) {
+      console.error('Error updating form data:', error);
+      throw new Error(`Failed to update form: ${error.message}`);
+    }
   }
 
   private static mapDbToFormData(dbData: DbFormData): FormData {

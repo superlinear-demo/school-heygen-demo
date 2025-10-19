@@ -8,9 +8,25 @@ export class HeyGenService {
   static async generateVideo(request: HeyGenVideoRequest): Promise<HeyGenVideoResponse | null> {
     try {
       const response = await axios.post(`${this.API_URL}/v1/video/generate`, {
-        script: request.script,
-        voice: request.voice || 'en-US-AriaNeural',
-        avatar: request.avatar || 'default'
+        video_inputs: [
+          {
+            character: {
+              type: 'avatar',
+              avatar_id: 'c1926d821b4d43d6a5f07f2985bb5cd1', // Hardcoded avatar ID
+              avatar_style: 'normal'
+            },
+            voice: {
+              type: 'text',
+              input_text: request.script,
+              voice_id: '1bd001e7e50f421d891986aad5158bc3' // Default voice ID
+            }
+          }
+        ],
+        dimension: {
+          width: 1080,
+          height: 1920
+        },
+        aspect_ratio: '16:9'
       }, {
         headers: {
           'Authorization': `Bearer ${this.API_KEY}`,
