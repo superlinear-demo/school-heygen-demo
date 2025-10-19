@@ -9,7 +9,7 @@ import ProgressBar from './ProgressBar';
 
 export default function AdmissionForm() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<{
+  const [, setFormData] = useState<{
     step1?: Step1Data;
     step2?: Step2Data;
     step3?: Step3Data;

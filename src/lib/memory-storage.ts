@@ -10,10 +10,6 @@ class MemoryStorage {
     console.log('Form saved to memory:', formData.id);
   }
 
-  static async getFormData(formId: string): Promise<FormData | null> {
-    return this.forms.get(formId) || null;
-  }
-
   static getFormData(formId: string): FormData | null {
     return this.forms.get(formId) || null;
   }

@@ -126,7 +126,7 @@ export class SupabaseService {
   }
 
   static async updateFormData(formId: string, updates: Partial<FormData>): Promise<void> {
-    const updateData: any = {
+    const updateData: Record<string, string> = {
       updated_at: new Date().toISOString()
     };
 

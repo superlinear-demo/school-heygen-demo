@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     
     if (hasSupabase) {
       // Update in Supabase
-      const { data, error } = await SupabaseService.supabase
+      const { error } = await SupabaseService.supabase
         .from('forms')
         .update({
           current_grade: step2.currentGrade,
@@ -28,8 +28,7 @@ export async function POST(request: NextRequest) {
           area_of_interest: step2.areaOfInterest,
           updated_at: new Date().toISOString()
         })
-        .eq('id', formId)
-        .select();
+        .eq('id', formId);
 
       if (error) {
         console.error('Supabase update error:', error);
@@ -40,15 +39,13 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // Update in memory storage
-      const existingData = MemoryStorage.getFormData(formId);
-      if (existingData) {
-        existingData.currentGrade = step2.currentGrade;
-        existingData.currentSchool = step2.currentSchool;
-        existingData.placeOfStudy = step2.placeOfStudy;
-        existingData.areaOfInterest = step2.areaOfInterest;
-        existingData.updatedAt = new Date().toISOString();
-        MemoryStorage.updateFormData(formId, existingData);
-      }
+      MemoryStorage.updateFormData(formId, {
+        currentGrade: step2.currentGrade,
+        currentSchool: step2.currentSchool,
+        placeOfStudy: step2.placeOfStudy,
+        areaOfInterest: step2.areaOfInterest,
+        updatedAt: new Date().toISOString()
+      });
     }
 
     return NextResponse.json({

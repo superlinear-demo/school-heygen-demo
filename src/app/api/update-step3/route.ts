@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     
     if (hasSupabase) {
       // Update in Supabase
-      const { data, error } = await SupabaseService.supabase
+      const { error } = await SupabaseService.supabase
         .from('forms')
         .update({
           phone_number: step3.phoneNumber,
@@ -39,14 +39,12 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // Update in memory storage
-      const existingData = MemoryStorage.getFormData(formId);
-      if (existingData) {
-        existingData.phoneNumber = step3.phoneNumber;
-        existingData.message = step3.message;
-        existingData.status = 'completed';
-        existingData.updatedAt = new Date().toISOString();
-        MemoryStorage.updateFormData(formId, existingData);
-      }
+      MemoryStorage.updateFormData(formId, {
+        phoneNumber: step3.phoneNumber,
+        message: step3.message,
+        status: 'completed',
+        updatedAt: new Date().toISOString()
+      });
     }
 
     return NextResponse.json({
