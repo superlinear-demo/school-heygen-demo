@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { VideoPollingService } from '@/lib/video-polling';
 import { MemoryStorage } from '@/lib/memory-storage';
 import { SupabaseService } from '@/lib/supabase-service';
