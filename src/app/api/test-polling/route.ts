@@ -3,7 +3,7 @@ import { VideoPollingService } from '@/lib/video-polling';
 import { MemoryStorage } from '@/lib/memory-storage';
 import { SupabaseService } from '@/lib/supabase-service';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     console.log('🧪 Testing polling system...');
     

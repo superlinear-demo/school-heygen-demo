@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { SupabaseService } from '@/lib/supabase-service';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     console.log('🔧 Setting up database schema...');
     
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if the column exists now
-    const { data, error } = await SupabaseService.supabase
+    const { error } = await SupabaseService.supabase
       .from('forms')
       .select('id, heygen_video_id')
       .limit(1);

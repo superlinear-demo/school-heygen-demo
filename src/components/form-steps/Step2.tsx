@@ -23,18 +23,6 @@ export default function Step2({ onSubmit, onPrevious }: Step2Props) {
     'Grade 4', 'Grade 5', 'Grade 6', 'Grade 7', 'Grade 8'
   ];
 
-  const interestOptions = [
-    'Science & Technology',
-    'Arts & Music',
-    'Sports & Athletics',
-    'Languages',
-    'Mathematics',
-    'Literature & Reading',
-    'Environmental Studies',
-    'Leadership & Public Speaking',
-    'Creative Writing',
-    'Robotics & Coding'
-  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
