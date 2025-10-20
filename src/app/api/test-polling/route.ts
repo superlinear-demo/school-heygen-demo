@@ -58,7 +58,7 @@ export async function GET() {
   } catch (error) {
     console.error('❌ Polling test error:', error);
     return NextResponse.json(
-      { error: 'Polling test failed', details: error.message },
+      { error: 'Polling test failed', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

@@ -64,8 +64,8 @@ export async function POST(request: NextRequest) {
 
     console.log('🎬 HeyGen response:', heygenResponse);
 
-    // Extract video ID from nested response structure
-    const videoId = heygenResponse?.data?.video_id || heygenResponse?.video_id;
+    // Extract video ID from response
+    const videoId = heygenResponse?.video_id;
     
     if (heygenResponse && videoId) {
       console.log('✅ HeyGen video generation initiated with ID:', videoId);
