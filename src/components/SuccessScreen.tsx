@@ -144,9 +144,6 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
                 <p className="text-blue-800 font-medium">
                   ⏳ Please wait while we generate your personalized welcome video
                 </p>
-                <p className="text-blue-600 text-sm mt-1">
-                  Polling attempt: {pollCount + 1}/30
-                </p>
               </div>
             </div>
           )}
