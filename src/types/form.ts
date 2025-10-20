@@ -10,6 +10,7 @@ export interface FormData {
   phoneNumber: string;
   message: string;
   status: 'in_progress' | 'completed';
+  heygenVideoId?: string;
   heygenVideoUrl?: string;
   createdAt: string;
   updatedAt: string;
@@ -24,8 +25,7 @@ export interface Step1Data {
 export interface Step2Data {
   currentGrade: string;
   currentSchool: string;
-  placeOfStudy: string;
-  areaOfInterest: string;
+  phoneNumber: string;
 }
 
 export interface Step3Data {

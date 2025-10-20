@@ -7,51 +7,115 @@ export class HeyGenService {
 
   static async generateVideo(request: HeyGenVideoRequest): Promise<HeyGenVideoResponse | null> {
     try {
-      const response = await axios.post(`${this.API_URL}/v1/video/generate`, {
+      const requestBody = {
         video_inputs: [
           {
             character: {
               type: 'avatar',
-              avatar_id: 'c1926d821b4d43d6a5f07f2985bb5cd1', // Hardcoded avatar ID
+              avatar_id: 'Daphne_public_1', // group id - c1926d821b4d43d6a5f07f2985bb5cd1 Hardcoded avatar ID
               avatar_style: 'normal'
             },
             voice: {
               type: 'text',
               input_text: request.script,
-              voice_id: '1bd001e7e50f421d891986aad5158bc3' // Default voice ID
+              voice_id: '97dd67ab8ce242b6a9e7689cb00c6414' // Updated voice ID
             }
           }
         ],
         dimension: {
-          width: 1080,
-          height: 1920
+          height: 720,
+          width: 1280
+        },
+        background: {
+          "type": "video",
+          "video_asset_id": "fortes_education",
+          "play_style": "loop"
         },
         aspect_ratio: '16:9'
-      }, {
+      };
+
+      console.log('🎬 HeyGen Video Generation Request:');
+      console.log('URL:', `${this.API_URL}/v2/video/generate`);
+      console.log('Headers:', {
+        'X-Api-Key': this.API_KEY ? `${this.API_KEY.substring(0, 10)}...` : 'NOT_SET',
+        'Content-Type': 'application/json'
+      });
+      console.log('Request Body:', JSON.stringify(requestBody, null, 2));
+
+      const response = await axios.post(`${this.API_URL}/v2/video/generate`, requestBody, {
         headers: {
-          'Authorization': `Bearer ${this.API_KEY}`,
+          'X-Api-Key': this.API_KEY,
           'Content-Type': 'application/json'
         }
       });
 
+      console.log('✅ HeyGen Video Generation Response:');
+      console.log('Status:', response.status);
+      console.log('Headers:', response.headers);
+      console.log('Response Body:', JSON.stringify(response.data, null, 2));
+
       return response.data;
     } catch (error) {
-      console.error('HeyGen video generation failed:', error);
+      console.error('❌ HeyGen video generation failed:');
+      if (error.response) {
+        console.error('Response Status:', error.response.status);
+        console.error('Response Headers:', error.response.headers);
+        console.error('Response Data:', JSON.stringify(error.response.data, null, 2));
+      } else if (error.request) {
+        console.error('Request made but no response received:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
+      }
+      console.error('Full Error:', error);
       return null;
     }
   }
 
   static async getVideoStatus(videoId: string): Promise<HeyGenVideoResponse | null> {
     try {
-      const response = await axios.get(`${this.API_URL}/v1/video/${videoId}`, {
+      const url = `${this.API_URL}/v1/video_status.get?video_id=${videoId}`;
+      
+      console.log('📊 HeyGen Video Status Request:');
+      console.log('URL:', url);
+      console.log('Video ID:', videoId);
+      console.log('Headers:', {
+        'X-Api-Key': this.API_KEY ? `${this.API_KEY.substring(0, 10)}...` : 'NOT_SET'
+      });
+
+      const response = await axios.get(url, {
         headers: {
-          'Authorization': `Bearer ${this.API_KEY}`
+          'X-Api-Key': this.API_KEY
         }
       });
 
-      return response.data;
+      console.log('✅ HeyGen Video Status Response:');
+      console.log('Status:', response.status);
+      console.log('Headers:', response.headers);
+      console.log('Response Body:', JSON.stringify(response.data, null, 2));
+
+      // Extract video status from the response structure
+      const responseData = response.data;
+      if (responseData && responseData.data) {
+        return {
+          video_id: videoId,
+          status: responseData.data.status || 'processing',
+          video_url: responseData.data.video_url
+        };
+      }
+
+      return responseData;
     } catch (error) {
-      console.error('HeyGen video status check failed:', error);
+      console.error('❌ HeyGen video status check failed:');
+      if (error.response) {
+        console.error('Response Status:', error.response.status);
+        console.error('Response Headers:', error.response.headers);
+        console.error('Response Data:', JSON.stringify(error.response.data, null, 2));
+      } else if (error.request) {
+        console.error('Request made but no response received:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
+      }
+      console.error('Full Error:', error);
       return null;
     }
   }

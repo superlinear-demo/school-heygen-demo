@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS forms (
   phone_number TEXT NOT NULL,
   message TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'in_progress' CHECK (status IN ('in_progress', 'completed')),
+  heygen_video_id TEXT,
   heygen_video_url TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()

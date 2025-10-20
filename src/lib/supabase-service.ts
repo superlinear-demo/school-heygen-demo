@@ -21,6 +21,10 @@ interface DbFormData {
 export class SupabaseService {
   static supabase = supabase;
 
+  static isConfigured(): boolean {
+    return !!(process.env.SL_SCHOOL_DEMO_SUPABASE_URL && process.env.SL_SCHOOL_DEMO_SUPABASE_SERVICE_ROLE_KEY);
+  }
+
   static async saveFormData(formData: FormData): Promise<void> {
     const { error } = await supabase
       .from('forms')

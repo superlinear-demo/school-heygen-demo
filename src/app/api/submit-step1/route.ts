@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { SupabaseService } from '@/lib/supabase-service';
 import { MemoryStorage } from '@/lib/memory-storage';
 import { HeyGenService } from '@/lib/heygen';
+import { VideoPollingService } from '@/lib/video-polling';
 import { FormData } from '@/types/form';
 
 export async function POST(request: NextRequest) {
@@ -54,20 +55,56 @@ export async function POST(request: NextRequest) {
     );
 
     // Generate HeyGen video immediately
+    console.log('🎬 Starting HeyGen video generation...');
     const heygenResponse = await HeyGenService.generateVideo({
       script,
       voice: 'en-US-AriaNeural',
       avatar: 'default'
     });
 
-    if (heygenResponse && heygenResponse.video_id) {
+    console.log('🎬 HeyGen response:', heygenResponse);
+
+    // Extract video ID from nested response structure
+    const videoId = heygenResponse?.data?.video_id || heygenResponse?.video_id;
+    
+    if (heygenResponse && videoId) {
+      console.log('✅ HeyGen video generation initiated with ID:', videoId);
+      
+      // Store video ID in the form data
+      const hasSupabase = process.env.SL_SCHOOL_DEMO_SUPABASE_URL && process.env.SL_SCHOOL_DEMO_SUPABASE_SERVICE_ROLE_KEY;
+      if (hasSupabase) {
+        console.log('💾 Storing video ID in Supabase...');
+        const { error } = await SupabaseService.supabase
+          .from('forms')
+          .update({ heygen_video_id: videoId })
+          .eq('id', formId);
+        
+        if (error) {
+          console.error('❌ Error storing video ID in Supabase:', error);
+          console.log('🔄 Falling back to memory storage...');
+          MemoryStorage.updateFormData(formId, { heygenVideoId: videoId });
+          console.log('✅ Video ID stored in memory storage as fallback');
+        } else {
+          console.log('✅ Video ID stored in Supabase successfully');
+        }
+      } else {
+        console.log('💾 Storing video ID in memory storage...');
+        MemoryStorage.updateFormData(formId, { heygenVideoId: videoId });
+        console.log('✅ Video ID stored in memory storage');
+      }
+
+      // Start polling for video status
+      console.log('🚀 Starting video polling service...');
+      VideoPollingService.startPolling();
+
       return NextResponse.json({
         success: true,
         formId,
         message: 'Step 1 completed. Video generation initiated.',
-        videoId: heygenResponse.video_id
+        videoId: videoId
       });
     } else {
+      console.log('⚠️ HeyGen video generation failed or no video ID returned');
       return NextResponse.json({
         success: true,
         formId,

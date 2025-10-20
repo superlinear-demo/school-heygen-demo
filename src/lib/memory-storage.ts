@@ -41,6 +41,10 @@ class MemoryStorage {
     }
   }
 
+  static getAllForms(): FormData[] {
+    return Array.from(this.forms.values());
+  }
+
   static async getCompletedFormsWithVideo(): Promise<FormData[]> {
     const forms: FormData[] = [];
     for (const form of this.forms.values()) {
