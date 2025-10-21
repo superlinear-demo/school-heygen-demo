@@ -39,14 +39,14 @@ export class WhatsAppService {
       return response.status === 200;
     } catch (error) {
       console.error('❌ WhatsApp message sending failed:');
-      if (axios.isAxiosError(error) && error.response) {
+      if (error.response) {
         console.error('Response Status:', error.response.status);
         console.error('Response Headers:', error.response.headers);
         console.error('Response Data:', JSON.stringify(error.response.data, null, 2));
-      } else if (axios.isAxiosError(error) && error.request) {
+      } else if (error.request) {
         console.error('Request made but no response received:', error.request);
       } else {
-        console.error('Error setting up request:', error instanceof Error ? error.message : 'Unknown error');
+        console.error('Error setting up request:', error.message);
       }
       console.error('Full Error:', error);
       return false;

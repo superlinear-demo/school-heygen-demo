@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Step1Data, Step2Data } from '@/types/form';
 import Step1 from './form-steps/Step1';
 import Step2 from './form-steps/Step2';
@@ -16,17 +16,6 @@ export default function AdmissionForm() {
   const [formId, setFormId] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string>('');
   const [isCompleted, setIsCompleted] = useState(false);
-
-  // Check localStorage on mount for persistence
-  useEffect(() => {
-    const savedFormId = localStorage.getItem('currentFormId');
-    const savedVideoStatus = localStorage.getItem('videoStatus');
-    
-    if (savedFormId && savedVideoStatus) {
-      setFormId(savedFormId);
-      setIsCompleted(true);
-    }
-  }, []);
 
   const handleStep1Submit = async (data: Step1Data) => {
     setFormData(prev => ({ ...prev, step1: data }));
@@ -66,11 +55,6 @@ export default function AdmissionForm() {
         if (response.ok) {
           const result = await response.json();
           console.log('Form completed successfully:', result);
-          
-          // Save formId to localStorage for persistence
-          localStorage.setItem('currentFormId', formId);
-          localStorage.setItem('videoStatus', 'processing');
-          
           setIsCompleted(true);
         } else {
           setSuccessMessage('Error completing form. Please try again.');
@@ -93,11 +77,6 @@ export default function AdmissionForm() {
   };
 
   const handleRestart = () => {
-    // Clear localStorage
-    localStorage.removeItem('currentFormId');
-    localStorage.removeItem('videoStatus');
-    localStorage.removeItem('videoUrl');
-    
     setCurrentStep(1);
     setFormData({});
     setFormId(null);

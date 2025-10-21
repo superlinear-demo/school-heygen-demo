@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { SupabaseService } from '@/lib/supabase-service';
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
     console.log('🔧 Setting up database schema...');
     
@@ -59,7 +59,7 @@ export async function POST() {
     }
 
     // Check if the column exists now
-    const { error } = await SupabaseService.supabase
+    const { data, error } = await SupabaseService.supabase
       .from('forms')
       .select('id, heygen_video_id')
       .limit(1);
@@ -84,7 +84,7 @@ export async function POST() {
   } catch (error) {
     console.error('❌ Database setup error:', error);
     return NextResponse.json(
-      { error: 'Database setup failed', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Database setup failed', details: error.message },
       { status: 500 }
     );
   }

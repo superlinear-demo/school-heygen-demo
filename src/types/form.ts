@@ -25,6 +25,8 @@ export interface Step1Data {
 export interface Step2Data {
   currentGrade: string;
   currentSchool: string;
+  placeOfStudy: string;
+  areaOfInterest: string;
   phoneNumber: string;
 }
 

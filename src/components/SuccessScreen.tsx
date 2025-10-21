@@ -14,24 +14,6 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
   const [pollCount, setPollCount] = useState(0);
   const [error, setError] = useState<string>('');
 
-  // Browser persistence - check localStorage on mount
-  useEffect(() => {
-    const savedFormId = localStorage.getItem('currentFormId');
-    const savedVideoStatus = localStorage.getItem('videoStatus');
-    const savedVideoUrl = localStorage.getItem('videoUrl');
-    
-    if (savedFormId === formId) {
-      if (savedVideoStatus === 'completed' && savedVideoUrl) {
-        setVideoStatus('completed');
-        setVideoUrl(savedVideoUrl);
-        setIsPolling(false);
-      } else if (savedVideoStatus === 'processing') {
-        setVideoStatus('processing');
-        setIsPolling(true);
-      }
-    }
-  }, [formId]);
-
   useEffect(() => {
     if (!isPolling) return;
 
@@ -48,18 +30,16 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
             setVideoStatus('completed');
             setVideoUrl(data.videoUrl);
             setIsPolling(false);
-            
-            // Save to localStorage
-            localStorage.setItem('currentFormId', formId);
-            localStorage.setItem('videoStatus', 'completed');
-            localStorage.setItem('videoUrl', data.videoUrl);
           } else {
             console.log('⏳ Video still processing...');
             setPollCount(prev => prev + 1);
             
-            // Save processing state to localStorage
-            localStorage.setItem('currentFormId', formId);
-            localStorage.setItem('videoStatus', 'processing');
+            // Stop polling after 30 attempts (5 minutes)
+            if (pollCount >= 30) {
+              console.log('⏰ Polling timeout reached');
+              setIsPolling(false);
+              setError('Video generation is taking longer than expected. Please check back later.');
+            }
           }
         } else {
           console.error('❌ Error checking video status:', data.error);
@@ -88,23 +68,6 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
     }
   };
 
-  const handleClearAndRestart = () => {
-    // Clear localStorage
-    localStorage.removeItem('currentFormId');
-    localStorage.removeItem('videoStatus');
-    localStorage.removeItem('videoUrl');
-    
-    // Reset state
-    setVideoStatus('processing');
-    setVideoUrl('');
-    setIsPolling(false);
-    setPollCount(0);
-    setError('');
-    
-    // Call restart function
-    onRestart();
-  };
-
   return (
     <div className="text-center space-y-8">
       {/* Success Header */}
@@ -118,7 +81,7 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
           Application Submitted Successfully!
         </h2>
         <p className="text-slate-600 text-lg">
-          Thank you for your interest in Fortes Education. We&apos;re excited to welcome you to our community!
+          Thank you for your interest in Fortes Education. We're excited to welcome you to our community!
         </p>
       </div>
 
@@ -134,15 +97,18 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
               <div className="flex items-center justify-center space-x-3">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                 <span className="text-lg font-semibold text-slate-700">
-                  Scheduling your interactive session...
+                  Generating your personalized video...
                 </span>
               </div>
               <p className="text-slate-600">
-                This may take 5 minutes. We have shared your details with our team and we are scheduling your interactive session with the school!
+                This may take a few minutes. We're creating a special welcome message just for you!
               </p>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-blue-800 font-medium">
-                  ⏳ We are generating your personalized welcome video (dev msg)
+                  ⏳ Please wait while we generate your personalized welcome video
+                </p>
+                <p className="text-blue-600 text-sm mt-1">
+                  Polling attempt: {pollCount + 1}/30
                 </p>
               </div>
             </div>
@@ -195,11 +161,11 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
 
       {/* Next Steps */}
       <div className="bg-slate-50 rounded-xl p-6 space-y-4">
-        <h4 className="text-lg font-semibold text-slate-800">What&apos;s Next?</h4>
+        <h4 className="text-lg font-semibold text-slate-800">What's Next?</h4>
         <ul className="text-slate-600 space-y-2 text-left">
           <li className="flex items-start space-x-2">
             <span className="text-blue-500 mt-1">•</span>
-            <span>We&apos;ll review your application and contact you soon</span>
+            <span>We'll review your application and contact you soon</span>
           </li>
           <li className="flex items-start space-x-2">
             <span className="text-blue-500 mt-1">•</span>
@@ -212,22 +178,14 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
         </ul>
       </div>
 
-      {/* Action Buttons */}
-      <div className="pt-4 space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={onRestart}
-            className="px-8 py-3 bg-gradient-to-r from-slate-500 to-slate-600 text-white font-semibold rounded-xl hover:from-slate-600 hover:to-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-500/20 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-slate-500/25"
-          >
-            Submit Another Application
-          </button>
-          <button
-            onClick={handleClearAndRestart}
-            className="px-8 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-xl hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-4 focus:ring-red-500/20 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-red-500/25"
-          >
-            Clear & Start Over
-          </button>
-        </div>
+      {/* Restart Button */}
+      <div className="pt-4">
+        <button
+          onClick={onRestart}
+          className="px-8 py-3 bg-gradient-to-r from-slate-500 to-slate-600 text-white font-semibold rounded-xl hover:from-slate-600 hover:to-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-500/20 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-slate-500/25"
+        >
+          Submit Another Application
+        </button>
       </div>
     </div>
   );
