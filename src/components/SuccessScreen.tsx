@@ -81,7 +81,7 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
           Application Submitted Successfully!
         </h2>
         <p className="text-slate-600 text-lg">
-          Thank you for your interest in Fortes Education. We're excited to welcome you to our community!
+          Thank you for your interest in Fortes Education. We&apos;re excited to welcome you to our community!
         </p>
       </div>
 
@@ -101,7 +101,7 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
                 </span>
               </div>
               <p className="text-slate-600">
-                This may take a few minutes. We're creating a special welcome message just for you!
+                This may take a few minutes. We&apos;re creating a special welcome message just for you!
               </p>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-blue-800 font-medium">
@@ -161,12 +161,12 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
 
       {/* Next Steps */}
       <div className="bg-slate-50 rounded-xl p-6 space-y-4">
-        <h4 className="text-lg font-semibold text-slate-800">What's Next?</h4>
+        <h4 className="text-lg font-semibold text-slate-800">What&apos;s Next?</h4>
         <ul className="text-slate-600 space-y-2 text-left">
-          <li className="flex items-start space-x-2">
-            <span className="text-blue-500 mt-1">•</span>
-            <span>We'll review your application and contact you soon</span>
-          </li>
+            <li className="flex items-start space-x-2">
+              <span className="text-blue-500 mt-1">•</span>
+              <span>We&apos;ll review your application and contact you soon</span>
+            </li>
           <li className="flex items-start space-x-2">
             <span className="text-blue-500 mt-1">•</span>
             <span>Check your WhatsApp for updates and the welcome video</span>

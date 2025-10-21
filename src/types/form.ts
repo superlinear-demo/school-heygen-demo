@@ -42,9 +42,14 @@ export interface HeyGenVideoRequest {
 }
 
 export interface HeyGenVideoResponse {
-  video_id: string;
-  status: string;
+  video_id?: string;
+  status?: string;
   video_url?: string;
+  data?: {
+    video_id: string;
+    status: string;
+    video_url?: string;
+  };
 }
 
 export interface WhatsAppMessage {

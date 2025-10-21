@@ -55,9 +55,6 @@ class MemoryStorage {
     return forms.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 
-  static async getAllForms(): Promise<FormData[]> {
-    return Array.from(this.forms.values());
-  }
 }
 
 export { MemoryStorage };

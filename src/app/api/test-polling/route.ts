@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { VideoPollingService } from '@/lib/video-polling';
 import { MemoryStorage } from '@/lib/memory-storage';
 import { SupabaseService } from '@/lib/supabase-service';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     console.log('🧪 Testing polling system...');
     
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('❌ Polling test error:', error);
     return NextResponse.json(
-      { error: 'Polling test failed', details: error.message },
+      { error: 'Polling test failed', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
