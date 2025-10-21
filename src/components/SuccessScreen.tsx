@@ -134,15 +134,15 @@ export default function SuccessScreen({ formId, onRestart }: SuccessScreenProps)
               <div className="flex items-center justify-center space-x-3">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                 <span className="text-lg font-semibold text-slate-700">
-                  Generating your personalized video...
+                  Scheduling your interactive session...
                 </span>
               </div>
               <p className="text-slate-600">
-                This may take a few minutes. We&apos;re creating a special welcome message just for you!
+                This may take 5 minutes. We have shared your details with our team and we are scheduling your interactive session with the school!
               </p>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <p className="text-blue-800 font-medium">
-                  ⏳ Please wait while we generate your personalized welcome video
+                  ⏳ We are generating your personalized welcome video (dev msg)
                 </p>
               </div>
             </div>
